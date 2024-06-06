@@ -12,14 +12,14 @@ class CalculosCalculosos {
     public static double[] ME = new double[] { 16.0, 19.0, 21.0, 23.0 };
     public static double[] Prob = new double[] { 2.7, 3.1, 3.5, 3.9 };
     public static double[] Dmg = new double[] { 5.4, 6.2, 7.0, 7.8 };
-    static final double[][] valorStats;
-    static final String[] OrdenSubstast;
-    public static boolean maxRango;
-    public static boolean SegmaxRango;
-    public static int ultimaSubida;
-
-    CalculosCalculosos() {
-    }
+    static final double[][] valorStats = new double[][] { Def, DefPorciento, HP, HPPorciento, Atq, AtqPorciento,
+            Recarga, ME, Prob, Dmg };
+    static final String[] OrdenSubstast = new String[] { "Def", "DefPorciento", "HP", "HPPorciento", "Atq",
+            "AtqPorciento", "Recarga",
+            "ME", "Prob", "Dmg" };;
+    public static boolean maxRango = false;
+    public static boolean SegmaxRango = false;
+    public static int ultimaSubida = 0;
 
     public static Stats deleteStats(Artefacto artefacto, String[] OrdenSubstast, double[][] valorStats) {
         new Stats(OrdenSubstast, valorStats);
@@ -133,7 +133,6 @@ class CalculosCalculosos {
         Random random = new Random();
         int numeroAleatorio = random.nextInt(4);
         if (artefacto.Substat4 == null && artefacto.nivel >= 4) {
-            System.out.println("El artefacto no tiene 4 substats");
             throw new IllegalArgumentException();
         } else if (artefacto.Substat4 == null && artefacto.nivel < 4) {
             artefacto = new Artefacto(4, artefacto.mainStat, artefacto.Substat1, artefacto.Substat2, artefacto.Substat3,
@@ -323,174 +322,169 @@ class CalculosCalculosos {
         double valorAdded = 0.0;
         Random random = new Random();
         int numeroAleatorio = random.nextInt(4);
-        if (artefacto.Substat4 == null && artefacto.nivel >= 4) {
-            System.out.println("El artefacto no tiene 4 substats");
-            throw new IllegalArgumentException();
-        } else {
-            if (artefacto.nivel < 4) {
-                artefacto = StatNivel4(artefacto);
-            } else {
-                if (maxRango && !SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.44999999999999996;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.6499999999999999;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.6499999999999999;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.44999999999999996;
-                    }
+
+        if (artefacto.nivel < 4) {
+            artefacto = StatNivel4(artefacto);
+        }
+        if (maxRango && !SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.44999999999999996;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.6499999999999999;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.6499999999999999;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.44999999999999996;
+            }
+        }
+
+        if (!maxRango && SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.3;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.5;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.5;
+                    probabilidadfija4 = 0.15;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.15;
+                    probabilidadfija2 = 0.35;
+                    probabilidadfija3 = 0.35;
+                    probabilidadfija4 = 0.3;
+            }
+        }
+
+        int i;
+        if (probabilidad < probabilidadfija1) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
                 }
-
-                if (!maxRango && SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.3;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.5;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.5;
-                            probabilidadfija4 = 0.15;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.15;
-                            probabilidadfija2 = 0.35;
-                            probabilidadfija3 = 0.35;
-                            probabilidadfija4 = 0.3;
-                    }
-                }
-
-                int i;
-                if (probabilidad < probabilidadfija1) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat1.valor += valorAdded;
-                    ultimaSubida = 1;
-                }
-
-                if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat2.valor += valorAdded;
-                    ultimaSubida = 2;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat3.valor += valorAdded;
-                    ultimaSubida = 3;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                                + probabilidadfija4) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat4.valor += valorAdded;
-                    ultimaSubida = 4;
-                }
-
-                artefacto.nivel = 8;
             }
 
-            return artefacto;
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat1.valor += valorAdded;
+            ultimaSubida = 1;
         }
+
+        if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat2.valor += valorAdded;
+            ultimaSubida = 2;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat3.valor += valorAdded;
+            ultimaSubida = 3;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                        + probabilidadfija4) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat4.valor += valorAdded;
+            ultimaSubida = 4;
+        }
+
+        artefacto.nivel = 8;
+
+        return artefacto;
     }
 
     public static Artefacto StatNivel12(Artefacto artefacto) throws IllegalArgumentException {
@@ -503,174 +497,171 @@ class CalculosCalculosos {
         double valorAdded = 0.0;
         Random random = new Random();
         int numeroAleatorio = random.nextInt(4);
-        if (artefacto.Substat4 == null && artefacto.nivel >= 4) {
-            System.out.println("El artefacto no tiene 4 substats");
-            throw new IllegalArgumentException();
-        } else {
-            if (artefacto.nivel < 8) {
-                artefacto = StatNivel8(artefacto);
-            } else {
-                if (maxRango && !SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.55;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.55;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.55;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.55;
-                    }
+
+        if (artefacto.nivel < 8) {
+            artefacto = StatNivel8(artefacto);
+        }
+
+        if (maxRango && !SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.55;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.55;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.55;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.55;
+            }
+        }
+
+        if (!maxRango && SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.4;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.4;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.4;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.4;
+            }
+        }
+
+        int i;
+        if (probabilidad < probabilidadfija1) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
                 }
-
-                if (!maxRango && SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.4;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.4;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.4;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.4;
-                    }
-                }
-
-                int i;
-                if (probabilidad < probabilidadfija1) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat1.valor += valorAdded;
-                    ultimaSubida = 1;
-                }
-
-                if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat2.valor += valorAdded;
-                    ultimaSubida = 2;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat3.valor += valorAdded;
-                    ultimaSubida = 3;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                                + probabilidadfija4) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat4.valor += valorAdded;
-                    ultimaSubida = 4;
-                }
-
-                artefacto.nivel = 12;
             }
 
-            return artefacto;
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat1.valor += valorAdded;
+            ultimaSubida = 1;
         }
+
+        if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat2.valor += valorAdded;
+            ultimaSubida = 2;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat3.valor += valorAdded;
+            ultimaSubida = 3;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                        + probabilidadfija4) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat4.valor += valorAdded;
+            ultimaSubida = 4;
+        }
+
+        artefacto.nivel = 12;
+
+        return artefacto;
+
     }
 
     public static Artefacto StatNivel16(Artefacto artefacto) throws IllegalArgumentException {
@@ -683,174 +674,172 @@ class CalculosCalculosos {
         double valorAdded = 0.0;
         Random random = new Random();
         int numeroAleatorio = random.nextInt(4);
-        if (artefacto.Substat4 == null && artefacto.nivel >= 4) {
-            System.out.println("El artefacto no tiene 4 substats");
-            throw new IllegalArgumentException();
-        } else {
-            if (artefacto.nivel < 12) {
-                artefacto = StatNivel12(artefacto);
-            } else {
-                if (maxRango && !SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.55;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.55;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.55;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.55;
-                    }
+
+        if (artefacto.nivel < 12) {
+
+            artefacto = StatNivel12(artefacto);
+        }
+
+        if (maxRango && !SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.55;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.55;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.55;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.55;
+            }
+        }
+
+        if (!maxRango && SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.4;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.4;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.4;
+                    probabilidadfija4 = 0.25;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.25;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.4;
+            }
+        }
+
+        int i;
+        if (probabilidad < probabilidadfija1) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
                 }
-
-                if (!maxRango && SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.4;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.4;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.4;
-                            probabilidadfija4 = 0.25;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.25;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.4;
-                    }
-                }
-
-                int i;
-                if (probabilidad < probabilidadfija1) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat1.valor += valorAdded;
-                    ultimaSubida = 1;
-                }
-
-                if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat2.valor += valorAdded;
-                    ultimaSubida = 2;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat3.valor += valorAdded;
-                    ultimaSubida = 3;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                                + probabilidadfija4) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat4.valor += valorAdded;
-                    ultimaSubida = 4;
-                }
-
-                artefacto.nivel = 16;
             }
 
-            return artefacto;
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat1.valor += valorAdded;
+            ultimaSubida = 1;
         }
+
+        if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat2.valor += valorAdded;
+            ultimaSubida = 2;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat3.valor += valorAdded;
+            ultimaSubida = 3;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                        + probabilidadfija4) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat4.valor += valorAdded;
+            ultimaSubida = 4;
+        }
+
+        artefacto.nivel = 16;
+
+        return artefacto;
+
     }
 
     public static Artefacto StatNivel20(Artefacto artefacto) throws IllegalArgumentException {
@@ -863,182 +852,167 @@ class CalculosCalculosos {
         double valorAdded = 0.0;
         Random random = new Random();
         int numeroAleatorio = random.nextInt(4);
-        if (artefacto.Substat4 == null && artefacto.nivel >= 4) {
-            System.out.println("El artefacto no tiene 4 substats");
-            throw new IllegalArgumentException();
-        } else {
-            if (artefacto.nivel < 16) {
-                artefacto = StatNivel16(artefacto);
-            } else {
-                if (maxRango && !SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 1.0;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.4;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.4;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.4;
-                    }
+        if (artefacto.nivel < 16) {
+            artefacto = StatNivel16(artefacto);
+        }
+        if (maxRango && !SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 1.0;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.4;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.4;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.4;
+            }
+        }
+
+        if (!maxRango && SegmaxRango) {
+            switch (ultimaSubida) {
+                case 1:
+                    probabilidadfija1 = 0.85;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 2:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.25;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 3:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.25;
+                    probabilidadfija4 = 0.1;
+                    break;
+                case 4:
+                    probabilidadfija1 = 0.7;
+                    probabilidadfija2 = 0.1;
+                    probabilidadfija3 = 0.1;
+                    probabilidadfija4 = 0.25;
+            }
+        }
+
+        int i;
+        if (probabilidad < probabilidadfija1) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
                 }
-
-                if (!maxRango && SegmaxRango) {
-                    switch (ultimaSubida) {
-                        case 1:
-                            probabilidadfija1 = 0.85;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 2:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.25;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 3:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.25;
-                            probabilidadfija4 = 0.1;
-                            break;
-                        case 4:
-                            probabilidadfija1 = 0.7;
-                            probabilidadfija2 = 0.1;
-                            probabilidadfija3 = 0.1;
-                            probabilidadfija4 = 0.25;
-                    }
-                }
-
-                int i;
-                if (probabilidad < probabilidadfija1) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat1.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat1.valor += valorAdded;
-                    ultimaSubida = 1;
-                }
-
-                if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat2.valor += valorAdded;
-                    ultimaSubida = 2;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat3.valor += valorAdded;
-                    ultimaSubida = 3;
-                }
-
-                if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                        && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
-                                + probabilidadfija4) {
-                    for (i = 0; i < OrdenSubstast.length; ++i) {
-                        if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
-                            valorAdded = valorStats[i][numeroAleatorio];
-                        }
-                    }
-
-                    if (numeroAleatorio == 3) {
-                        maxRango = true;
-                        SegmaxRango = false;
-                    }
-
-                    if (numeroAleatorio == 2) {
-                        maxRango = false;
-                        SegmaxRango = true;
-                    } else {
-                        maxRango = false;
-                        SegmaxRango = false;
-                    }
-
-                    artefacto.Substat4.valor += valorAdded;
-                    ultimaSubida = 4;
-                }
-
-                artefacto.nivel = 20;
             }
 
-            return artefacto;
-        }
-    }
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
 
-    static {
-        valorStats = new double[][] { Def, DefPorciento, HP, HPPorciento, Atq, AtqPorciento, Recarga, ME, Prob, Dmg };
-        OrdenSubstast = new String[] { "Def", "DefPorciento", "HP", "HPPorciento", "Atq", "AtqPorciento", "Recarga",
-                "ME", "Prob", "Dmg" };
-        maxRango = false;
-        SegmaxRango = false;
-        ultimaSubida = 0;
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat1.valor += valorAdded;
+            ultimaSubida = 1;
+        }
+
+        if (probabilidad > probabilidadfija1 && probabilidad < probabilidadfija1 + probabilidadfija2) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat2.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat2.valor += valorAdded;
+            ultimaSubida = 2;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat3.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat3.valor += valorAdded;
+            ultimaSubida = 3;
+        }
+
+        if (probabilidad > probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                && probabilidad < probabilidadfija1 + probabilidadfija2 + probabilidadfija3
+                        + probabilidadfija4) {
+            for (i = 0; i < OrdenSubstast.length; ++i) {
+                if (OrdenSubstast[i] == artefacto.Substat4.tipo) {
+                    valorAdded = valorStats[i][numeroAleatorio];
+                }
+            }
+
+            if (numeroAleatorio == 3) {
+                maxRango = true;
+                SegmaxRango = false;
+            }
+
+            if (numeroAleatorio == 2) {
+                maxRango = false;
+                SegmaxRango = true;
+            } else {
+                maxRango = false;
+                SegmaxRango = false;
+            }
+
+            artefacto.Substat4.valor += valorAdded;
+            ultimaSubida = 4;
+        }
+
+        artefacto.nivel = 20;
+
+        return artefacto;
     }
 }
